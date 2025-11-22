@@ -40,6 +40,9 @@ The project emphasizes clean **OOP Architecture** (Polymorphism, Composition, Ag
 
 ## 🏗️ System Architecture
 
+![System Architecture UML](Student_Progress_Tracker_Final Architecture.svg)
+
+
 The project follows a strict **Model-View-Controller (MVC)** pattern adapted for desktop GUI.
 
 ### 1. The Model (Logic Layer)
@@ -127,4 +130,3 @@ When you run the app for the first time, a default teacher account is created:
 ---
 
 *Built with ❤️ using C++ and FLTK by Basil Saeed & Jaweria*
-```
