@@ -92,7 +92,7 @@ ProjectRoot/
 
 1.  **Clone the Repository**
     ```bash
-    git clone [https://github.com/yourusername/StudentProgressTracker.git](https://github.com/yourusername/StudentProgressTracker.git)
+    git clone https://github.com/BasilSaeedBari-bb09892/Student-Progress-Tracker---Habib---OOP-Project.git)
     cd StudentProgressTracker
     ```
 
