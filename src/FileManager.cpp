@@ -17,9 +17,9 @@ std::vector<std::string> FileManager::split(const std::string &s, char delimiter
     return tokens;
 }
 
-// =============================================================================
+
 // SAVE LOGIC
-// =============================================================================
+
 void FileManager::saveAllData(const std::vector<Teacher*>& teachers, 
                               const std::vector<Student*>& students,
                               const std::vector<std::string>& globalSubjects) {
@@ -74,9 +74,9 @@ void FileManager::saveSingleStudent(Student* s) {
     }
 }
 
-// =============================================================================
+
 // LOAD LOGIC
-// =============================================================================
+
 void FileManager::loadAllData(std::vector<Teacher*>& teachers, 
                               std::vector<Student*>& students,
                               std::vector<std::string>& globalSubjects) {
@@ -92,7 +92,8 @@ void FileManager::loadAllData(std::vector<Teacher*>& teachers,
                 Student* s = loadSingleStudent(entry.path());
                 if (s) {
                     students.push_back(s);
-                    // Link student to ALL teachers (Logic: Teachers see all students, filter subjects later)
+                    // Link student to ALL teachers 
+                    //(Logic: Teachers see all students, filter subjects later)
                     for(auto* t : teachers) {
                         t->addStudent(s);
                     }
@@ -183,4 +184,20 @@ Student* FileManager::loadSingleStudent(const fs::path& filePath) {
         } catch (...) {}
     }
     return student;
+}
+
+void FileManager::exportReport(std::string filename, std::string content) {
+    // Create a 'reports' folder if it doesn't exist
+    if (!fs::exists("data/reports")) {
+        fs::create_directory("data/reports");
+    }
+    
+    std::string fullPath = "data/reports/" + filename;
+    std::ofstream file(fullPath);
+    if (file.is_open()) {
+        file << content;
+        file.close();
+        // Optional: Print to console for debugging
+        std::cout << "Report saved to: " << fullPath << std::endl;
+    }
 }

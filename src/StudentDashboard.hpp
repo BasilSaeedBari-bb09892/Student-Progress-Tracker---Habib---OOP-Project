@@ -1,6 +1,12 @@
 #ifndef STUDENTDASHBOARD_HPP
 #define STUDENTDASHBOARD_HPP
 
+#include "StudentReport.hpp"
+#include "FileManager.hpp"
+#include <FL/fl_ask.H> // For the popup message
+
+
+
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Tabs.H>
@@ -26,8 +32,12 @@ private:
     
     // Helper to build a tab for a specific subject
     void createSubjectTab(Subject* sub, int x, int y, int w, int h);
-
+    static void report_cb(Fl_Widget* w, void* v);
     static void logout_cb(Fl_Widget* w, void* v);
+    void updateHeaderStats(Subject* sub);
+
+    // NEW: Callback that triggers when a user clicks a tab
+    static void tab_changed_cb(Fl_Widget* w, void* v);
 
 public:
     StudentDashboard(Student* student);

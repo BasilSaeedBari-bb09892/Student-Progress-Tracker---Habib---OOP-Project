@@ -16,7 +16,7 @@ public:
     static void loadAllData(std::vector<Teacher*>& teachers, 
                             std::vector<Student*>& students,
                             std::vector<std::string>& globalSubjects);
-
+    static void exportReport(std::string filename, std::string content);
 private:
     static std::vector<std::string> split(const std::string &s, char delimiter);
     

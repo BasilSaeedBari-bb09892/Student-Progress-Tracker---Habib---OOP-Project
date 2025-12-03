@@ -21,7 +21,8 @@ void Teacher::assignSubject(Student* student, Subject* subject) {
     }
 }
 
-void Teacher::recordAssessment(Student* student, std::string subjectName, Assessment a) {
+void Teacher::recordAssessment(Student* student, std::string subjectName,
+     Assessment a) {
     if (!student) return;
     
     // Search for a subject that matches Name AND My Teacher ID
@@ -32,14 +33,14 @@ void Teacher::recordAssessment(Student* student, std::string subjectName, Assess
         }
     }
     
-    // FIX: Pass 'this->id' and 'this->name' to the new constructor
+    Subject* newSub = new Subject(subjectName, 100.0f, this->id, this->name);  
     // This ensures the subject is "owned" by this specific teacher.
-    Subject* newSub = new Subject(subjectName, 100.0f, this->id, this->name); 
     newSub->addAssessment(a);
     student->addSubject(newSub);
 }
 
-void Teacher::updateAssessment(Student* student, std::string subjectName, int assessmentIndex, float score, float total, std::string feedback) {
+void Teacher::updateAssessment(Student* student, std::string subjectName, 
+    int assessmentIndex, float score, float total, std::string feedback) {
     if (!student) return;
     
     // Search for MY specific subject instance
@@ -57,5 +58,4 @@ void Teacher::updateAssessment(Student* student, std::string subjectName, int as
 }
 
 void Teacher::displayInfo() const {
-    std::cout << "Teacher: " << name << " | Students: " << students.size() << std::endl;
-}
+    std::cout << "Teacher: " << name << " | Students: " << students.size() << std::endl;}

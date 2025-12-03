@@ -17,13 +17,14 @@
 
 class App {
 private:
-    std::vector<Teacher*> teachers;
+    std::vector<Teacher*> teachers; //vectors to allow dynamic prog to avoid copying, to allow dynamic allocation, no limit, less space, direct mod 
+    // (avoids copying large objects, allows polymorphism, create objects on the heap and manage them centrally.)
     std::vector<Student*> students;
     
     // NEW: Global list of subject names (e.g., "Math", "Science")
     std::vector<std::string> globalSubjects; 
 
-    LoginWindow* loginWindow;
+    LoginWindow* loginWindow; //an object of created class "LoginWindow"
     TeacherDashboard* teacherDash;
     StudentDashboard* studentDash;
 
@@ -63,9 +64,9 @@ public:
         loginWindow = new LoginWindow(teachers, students);
     }
 
-    // ===========================
+ 
     // NEW: Subject Management
-    // ===========================
+
     void addGlobalSubject(std::string name) {
         // Avoid duplicates
         for (const auto& s : globalSubjects) {

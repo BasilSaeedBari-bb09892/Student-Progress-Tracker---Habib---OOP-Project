@@ -5,6 +5,7 @@
 #include "Person.hpp"
 #include "Subject.hpp"
 
+
 class Student : public Person {
 private:
     std::vector<Subject*> subjects; // Composition: Student owns Subjects

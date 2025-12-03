@@ -1,5 +1,10 @@
 #ifndef TEACHERDASHBOARD_HPP
 #define TEACHERDASHBOARD_HPP
+// 1. Add includes
+#include "TeacherReport.hpp" 
+#include "FileManager.hpp"
+#include <FL/fl_ask.H>
+
 
 #include <FL/Fl.H>
 #include <FL/Fl_Double_Window.H>
@@ -24,6 +29,8 @@ private:
     Fl_Group *mainArea;
     
     Fl_Button *logoutBtn;
+
+    
     Fl_Button *addStudentBtn;
     Fl_Button *addSubjectBtn; 
 
@@ -42,6 +49,8 @@ private:
     Fl_Button *actionBtn; // Renamed from addAssessmentBtn because it can now Update
 
     // Callbacks
+    static void full_data_report_cb(Fl_Widget* w, void* v); // NEW Callback
+    static void class_report_cb(Fl_Widget* w, void* v);
     static void logout_cb(Fl_Widget* w, void* v);
     static void action_cb(Fl_Widget* w, void* v); // Renamed
     static void student_select_cb(Fl_Widget* w, void* v);

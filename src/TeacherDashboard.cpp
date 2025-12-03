@@ -6,6 +6,7 @@
 #include <cstdlib> 
 #include <vector>
 
+// Helper
 float safe_float(const char* val) {
     if (!val || *val == 0) return 0.0f;
     try { return std::stof(val); } catch (...) { return 0.0f; }
@@ -29,7 +30,14 @@ TeacherDashboard::TeacherDashboard(Teacher* teacher) : currentTeacher(teacher) {
     addSubjectBtn->color(fl_rgb_color(80, 100, 140)); 
     addSubjectBtn->labelcolor(FL_WHITE);
 
-    logoutBtn = new Fl_Button(20, 550, 160, 30, "Logout");
+    // REPORT BUTTONS
+    Fl_Button* reportBtn = new Fl_Button(20, 480, 160, 30, "Class Summary");
+    reportBtn->callback(class_report_cb, currentTeacher);
+
+    Fl_Button* fullReportBtn = new Fl_Button(20, 520, 160, 30, "Full Data Export");
+    fullReportBtn->callback(full_data_report_cb, currentTeacher);
+
+    logoutBtn = new Fl_Button(20, 560, 160, 30, "Logout"); // Moved to very bottom
     logoutBtn->callback(logout_cb);
     sidebar->end();
 
@@ -121,7 +129,6 @@ void TeacherDashboard::refreshAssessmentList() {
     if (subIdx < 0) return;
     std::string subName = subjectChoice->text(subIdx);
 
-    // CRITICAL UPDATE: Only show assessments that match MY Teacher ID
     for (auto* subj : s->getSubjects()) {
         if (subj->getName() == subName && subj->getTeacherId() == currentTeacher->getId()) {
             for (const auto& a : subj->getAssessments()) {
@@ -142,7 +149,10 @@ void TeacherDashboard::student_select_cb(Fl_Widget* w, void* v) {
     d->selectedStudentName->copy_label(s->getName().c_str());
     d->refreshAssessmentList();
 }
-void TeacherDashboard::subject_change_cb(Fl_Widget* w, void* v) { ((TeacherDashboard*)v)->refreshAssessmentList(); }
+
+void TeacherDashboard::subject_change_cb(Fl_Widget* w, void* v) { 
+    ((TeacherDashboard*)v)->refreshAssessmentList(); 
+}
 
 void TeacherDashboard::assessment_change_cb(Fl_Widget* w, void* v) {
     TeacherDashboard* d = (TeacherDashboard*)v;
@@ -158,7 +168,6 @@ void TeacherDashboard::assessment_change_cb(Fl_Widget* w, void* v) {
         Student* s = (Student*)d->studentList->data(line);
         std::string subName = d->subjectChoice->text(d->subjectChoice->value());
 
-        // FILTER BY TEACHER ID
         for (auto* subj : s->getSubjects()) {
             if (subj->getName() == subName && subj->getTeacherId() == d->currentTeacher->getId()) {
                 const auto& assessments = subj->getAssessments();
@@ -196,15 +205,35 @@ void TeacherDashboard::action_cb(Fl_Widget* w, void* v) {
         std::string tit = d->assessmentTitleInput->value();
         if (tit.empty()) { fl_alert("Title required!"); return; }
         Assessment a(tit, scr, tot, fdb, "2025-11-22");
-        d->currentTeacher->recordAssessment(s, sub, a); // Logic handles Teacher ID internally
+        d->currentTeacher->recordAssessment(s, sub, a); 
         fl_message("Added!");
     } else {
         int vecIdx = choice - 1;
-        d->currentTeacher->updateAssessment(s, sub, vecIdx, scr, tot, fdb); // Logic handles Teacher ID internally
+        d->currentTeacher->updateAssessment(s, sub, vecIdx, scr, tot, fdb); 
         fl_message("Updated!");
     }
     d->refreshAssessmentList();
 }
+
+// 1. SUMMARY REPORT CALLBACK
+void TeacherDashboard::class_report_cb(Fl_Widget* w, void* v) {
+    Teacher* t = (Teacher*)v;
+    std::string report = TeacherReport::generate(t);
+    std::string filename = "Teacher_" + std::to_string(t->getId()) + "_Summary.txt";
+    FileManager::exportReport(filename, report);
+    fl_message("Class Summary generated!\nSaved to 'reports/%s'", filename.c_str());
+}
+
+// 2. DETAILED REPORT CALLBACK
+void TeacherDashboard::full_data_report_cb(Fl_Widget* w, void* v) {
+    Teacher* t = (Teacher*)v;
+    std::string report = TeacherReport::generateDetailedReport(t);
+    std::string filename = "Teacher_" + std::to_string(t->getId()) + "_FullData.txt";
+    FileManager::exportReport(filename, report);
+    fl_message("Detailed Ledger generated!\nSaved to 'reports/%s'", filename.c_str());
+}
+
+// --- POPUP WINDOWS ---
 
 struct StudentCreationData { Fl_Input* name; Fl_Input* email; Fl_Input* pass; Fl_Window* popup; TeacherDashboard* dash; };
 void TeacherDashboard::add_student_click_cb(Fl_Widget* w, void* v) {
